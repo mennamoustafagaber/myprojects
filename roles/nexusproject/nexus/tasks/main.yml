@@ -1,0 +1,61 @@
+---
+- name: Install Java (required by Nexus)
+  apt:
+    name: openjdk-11-jdk
+    state: present
+  become: true
+
+- name: Download Nexus
+  get_url:
+    url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
+    dest: /tmp/nexus.tar.gz
+
+- name: Extract Nexus
+  unarchive:
+    src: /tmp/nexus.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: Get Nexus extracted directory name
+  shell: ls -d /opt/nexus-*
+  register: extracted_dir
+
+- name: Rename Nexus directory
+  command:
+    cmd: mv "{{ extracted_dir.stdout }}" /opt/nexus
+  become: true
+
+
+- name: Create nexus user
+  user:
+    name: nexus
+    home: /opt/nexus
+    shell: /bin/bash
+  become: true
+
+- name: Change ownership of Nexus directory
+  file:
+    path: /opt/nexus
+    state: directory
+    owner: nexus
+    group: nexus
+    recurse: yes
+  become: true
+
+- name: Configure Nexus systemd service
+  template:
+    src: nexus.service.j2
+    dest: /etc/systemd/system/nexus.service
+  become: true
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+  become: true
+
+- name: Start and Enable Nexus service
+  systemd:
+    name: nexus
+    state: started
+    enabled: yes
+  become: true
