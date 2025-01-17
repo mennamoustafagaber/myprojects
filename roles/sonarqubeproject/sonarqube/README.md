@@ -1,38 +1,57 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+sonarqube
 
 Requirements
 ------------
+- Ansible 2.9+ installed on your control machine.
+- A target Linux server with apt package manager (e.g., Ubuntu or Debian).
+- Sudo privileges on the target server.
+- At least 2GB RAM for SonarQube and 3GB RAM for production-grade performance.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+
 
 Role Variables
 --------------
+- The role uses the following configurable variables:
+Variable	       Default Value	                                                                       Description
+sonarqube_download_url	https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.1.69595.zip	URL for downloading SonarQube.
+sonarqube_user	        sonarqube	                                                                        User under which SonarQube will run.
+sonarqube_install_dir	/opt/sonarqube	                                                                        Directory where SonarQube will be installed.
+sonarqube_port	        9000	                                                                                Port for accessing the SonarQube web interface.
+sonarqube_host	        0.0.0.0	                                                                                Host to bind SonarQube (accessible from anywhere).
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
-Dependencies
+
+
+Usage Instructions
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+1- Clone the Repository Clone the GitHub repository to your control machine:
 
-Example Playbook
-----------------
+   - git clone https://github.com/mennamoustafagaber/myprojects.git
+   - cd myprojects/roles/sonarqubeproject
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+2- Define a Playbook Create a playbook (e.g., sonarqube-playbook.yml) to include this role:
 
-    - hosts: servers
+    - hosts: all
+      become: yes
       roles:
-         - { role: username.rolename, x: 42 }
+        - sonarqube
 
-License
--------
 
-BSD
+3- Run the Playbook Execute the playbook against your target servers:
+   - ansible-playbook -i inventory sonarqube-playbook.yml
 
-Author Information
-------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+4- Access SonarQube
+    After successful setup, open a browser and navigate to:
+    http://<your-server-ip>:9000
+     Default credentials:
+      Username: admin
+      Password: admin
+
+
+
+
