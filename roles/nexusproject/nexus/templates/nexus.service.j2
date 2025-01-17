@@ -1,6 +1,5 @@
-# roles/nexus/templates/nexus.service.j2
 [Unit]
-Description=Nexus service
+Description=Nexus Repository Manager
 After=network.target
 
 [Service]
@@ -10,6 +9,7 @@ ExecStop=/opt/nexus/bin/nexus stop
 User=nexus
 Group=nexus
 Restart=always
+Environment=RUN_AS_USER=nexus
 
 [Install]
 WantedBy=multi-user.target
