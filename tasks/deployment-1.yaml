@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: busyboxapp
+  template:
+    metadata:
+      labels:
+        app: busyboxapp
+    spec:
+      containers:
+        - name: busybox
+          image: nginx  # Changed from busybox to nginx
+          command: ["sleep", "3600"]
+
